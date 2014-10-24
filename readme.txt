@@ -25,6 +25,11 @@ To get the latest updates on this plugin or other free plugins I'm going to
 release, you can visit my site, [cartible.com](http://cartible.com), 
 and sign up for the newsletter.
 
+*Image credits: [Photo](https://flic.kr/p/bEiYBV) by Ivan / [CC
+BY](https://creativecommons.org/licenses/by/2.0/)*
+
+
+
 == Installation ==
 
 Follow these steps:
