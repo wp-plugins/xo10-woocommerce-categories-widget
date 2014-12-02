@@ -3,13 +3,13 @@
  * Plugin Name: XO10 - WooCommerce Categories widget
  * Plugin URI: http://cartible.com
  * Description: Adds a widget that is able to display WooCommerce product category image thumbnails.
- * Version: 1.0.0
+ * Version: 1.1
  * Author: Walter Lee
  * Author URI: http://cartible.com
  * Requires at least: 3.9
  * Tested up to: 4.0
  *
- * Text Domain: xo10_wc_catswidget
+ * Text Domain: xo10-woocommerce-categories-widget
  * Domain Path: /i18n/languages/
  */
 

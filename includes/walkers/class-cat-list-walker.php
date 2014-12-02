@@ -8,7 +8,8 @@ include_once( XO10_WC_CATS_PLUGIN_DIR . '../woocommerce/includes/walkers/class-p
 
 class XO10_WC_Cat_List_Walker extends WC_Product_Cat_List_Walker {
 
-  public $imgtxt = 'mixed';
+  public $countpos = 1; // extreme right
+  public $imgtxt = 'iltr';
   public $imgw = 42;
   public $imgh = 42;
   public $forcecss = 'no';
@@ -56,17 +57,25 @@ class XO10_WC_Cat_List_Walker extends WC_Product_Cat_List_Walker {
 			$output .= ' current-cat-parent';
 		}
 
-    $output .=  '"><a href="' . get_term_link( (int) $cat->term_id, 'product_cat' ) . '">';
+    // post count on extreme left
+    if( $args['show_count'] && $this->countpos == 'extleft' ) { 
+      $output .=  '"><span class="count">(' . $cat->count . ')</span> <a href="' . get_term_link( (int) $cat->term_id, 'product_cat' ) . '">';
+    } else {
+      $output .=  '"><a href="' . get_term_link( (int) $cat->term_id, 'product_cat' ) . '">';
+    }
             
     if( $this->imgtxt == 'text' ) {
       $output .= '<span class="cat-name">' . __( $cat->name, 'woocommerce' ) . '</span></a>';
     } elseif ( $this->imgtxt == 'image' ) {
       $output .= '<img src="' . $imgsrc . '" title="' . __( $cat->name, 'woocommerce' ) . '" alt="' . __( $cat->name, 'woocommerce' ) . '" ' . $img_constraint . ' /></a>';
-    } else {
+    } elseif( $this->imgtxt == 'tlir' ) {
+      $output .= '<span class="cat-name">' .  __( $cat->name, 'woocommerce' ) . '</span> <img src="' . $imgsrc . '" title="' . __( $cat->name, 'woocommerce' ) . '" alt="' . __( $cat->name, 'woocommerce' ) . '" ' . $img_constraint . ' /></a>';
+    } else { // iltr i.e. image left, text right
       $output .= '<img src="' . $imgsrc . '" title="' . __( $cat->name, 'woocommerce' ) . '" alt="' . __( $cat->name, 'woocommerce' ) . '" ' . $img_constraint . ' /> <span class="cat-name">' .  __( $cat->name, 'woocommerce' ) . '</span></a>';
     }
     
-    if ( $args['show_count'] ) {
+    // post count on extreme right
+    if ( $args['show_count'] && $this->countpos == 'extright' ) { 
 			$output .= ' <span class="count">(' . $cat->count . ')</span>';
 		}
 

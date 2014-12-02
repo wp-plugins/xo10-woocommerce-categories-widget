@@ -30,9 +30,9 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 	 */
 	public function __construct() {
 		$this->widget_cssclass    =  XO10_WC_Categories_Widget::WIDGET_CSS_CLASS; // css class
-		$this->widget_description = __( 'A list or dropdown of product categories.', 'xo10_wc_catswidget' );
+		$this->widget_description = __( 'A list or dropdown of product categories.', 'xo10-woocommerce-categories-widget' );
 		$this->widget_id          = XO10_WC_Categories_Widget::WIDGET_SLUG; // option_id in database =  prefixed with "widget_"
-		$this->widget_name        = __( XO10_WC_Categories_Widget::WIDGET_DISPLAY_NAME, 'xo10_wc_catswidget' );
+		$this->widget_name        = __( XO10_WC_Categories_Widget::WIDGET_DISPLAY_NAME, 'xo10-woocommerce-categories-widget' );
 		$this->settings           = array(
 			'title'  => array(
 				'type'  => 'text',
@@ -70,12 +70,13 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 			),
 			'img_text_display' => array(
 				'type'  => 'select',
-				'std'   => 'mixed',
-				'label' => __( 'Text/Image Display', 'xo10_wc_catswidget' ),
+				'std'   => 'iltr',
+				'label' => __( 'Text/Image display', 'xo10-woocommerce-categories-widget' ),
 				'options' => array(
-					'image' => __( 'Image only', 'xo10_wc_catswidget' ),
-					'text'  => __( 'Text only', 'xo10_wc_catswidget' ),
-					'mixed' => __( 'Image and Text', 'xo10_wc_catswidget' )
+					'image' => __( 'Image only', 'xo10-woocommerce-categories-widget' ),
+					'text'  => __( 'Text only', 'xo10-woocommerce-categories-widget' ),
+					'iltr' => __( 'Image left, Text right', 'xo10-woocommerce-categories-widget' ),
+					'tlir' => __( 'Text left, Image right', 'xo10-woocommerce-categories-widget' )
 				)
 			),
 			'img_width' => array(
@@ -84,7 +85,7 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 				'min'   => XO10_WC_Categories_Widget::IMG_W_MIN,
 				'max'   => XO10_WC_Categories_Widget::IMG_W_MAX,
 				'std'   => XO10_WC_Categories_Widget::IMG_W_DEFAULT,
-				'label' => __( 'Image Width in px (Min = ' . XO10_WC_Categories_Widget::IMG_W_MIN . ', Max = ' . XO10_WC_Categories_Widget::IMG_W_MAX . ')', 'xo10_wc_catswidget' )
+				'label' => __( 'Image Width in px (Min = ' . XO10_WC_Categories_Widget::IMG_W_MIN . ', Max = ' . XO10_WC_Categories_Widget::IMG_W_MAX . ')', 'xo10-woocommerce-categories-widget' )
 			),
 			'img_height' => array(
 				'type'  => 'number',
@@ -92,26 +93,35 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 				'min'   => XO10_WC_Categories_Widget::IMG_H_MIN,
 				'max'   => XO10_WC_Categories_Widget::IMG_H_MAX,
 				'std'   => XO10_WC_Categories_Widget::IMG_H_DEFAULT,
-				'label' => __( 'Image Height in px (Min = ' . XO10_WC_Categories_Widget::IMG_H_MIN . ', Max = ' . XO10_WC_Categories_Widget::IMG_H_MAX . ')', 'xo10_wc_catswidget' )
+				'label' => __( 'Image Height in px (Min = ' . XO10_WC_Categories_Widget::IMG_H_MIN . ', Max = ' . XO10_WC_Categories_Widget::IMG_H_MAX . ')', 'xo10-woocommerce-categories-widget' )
+			),
+			'count_pos' => array(
+				'type'  => 'select',
+				'std'   => 'extright',
+				'label' => __( 'Post Counts display', 'xo10-woocommerce-categories-widget' ),
+				'options' => array(
+					'extright' => __( 'Extreme Right', 'xo10-woocommerce-categories-widget' ),
+					'extleft'  => __( 'Extreme Left', 'xo10-woocommerce-categories-widget' ),
+				)
 			),
 			'list_css_class'  => array(
 				'type'  => 'text',
-				'std'   => __( 'product-categories', 'xo10_wc_catswidget' ),
-				'label' => __( 'List CSS class (for styling purposes)', 'xo10_wc_catswidget' )
+				'std'   => __( 'product-categories', 'xo10-woocommerce-categories-widget' ),
+				'label' => __( 'List CSS class (for styling purposes)', 'xo10-woocommerce-categories-widget' )
 			),
 			'list_css_id'  => array(
 				'type'  => 'text',
 				'std'   => '',
-				'label' => __( 'List CSS ID (for styling purposes)', 'xo10_wc_catswidget' )
+				'label' => __( 'List CSS ID (for styling purposes)', 'xo10-woocommerce-categories-widget' )
 			),
       // walter
 			'force_css' => array(
 				'type'  => 'select',
 				'std'   => 'no',
-				'label' => __( 'Force Display (Testing only. May not work.)', 'xo10_wc_catswidget' ),
+				'label' => __( 'Force Display (Testing only. May not work.)', 'xo10-woocommerce-categories-widget' ),
 				'options' => array(
-					'no' => __( 'No', 'xo10_wc_catswidget' ),
-					'vsp10'  => __( 'Vertical space between categories: 10px', 'xo10_wc_catswidget' ),
+					'no' => __( 'No', 'xo10-woocommerce-categories-widget' ),
+					'vsp10'  => __( 'Vertical space between categories: 10px', 'xo10-woocommerce-categories-widget' ),
 				)
 			),
 		);
@@ -167,6 +177,7 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 
 		$title         = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 		$c             = ! empty( $instance['count'] );
+
 		$h             = ! empty( $instance['hierarchical'] );
 		$s             = ! empty( $instance['show_children_only'] );
 		$d             = ! empty( $instance['dropdown'] );
@@ -176,6 +187,7 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 		$imgtxt        = $instance['img_text_display'] ? $instance['img_text_display'] : $this->settings['img_text_display']['std'];
 		$imgw          = $instance['img_width'] ? $instance['img_width'] : $this->settings['img_width']['std'];
 		$imgh          = $instance['img_height'] ? $instance['img_height'] : $this->settings['img_height']['std'];
+		$cpos          = $instance['count_pos'] ? $instance['count_pos'] : $this->settings['count_pos']['std'];
 		$css_class     = $instance['list_css_class'] ? $instance['list_css_class'] : $this->settings['list_css_class']['std'];
 		$css_id        = $instance['list_css_id'] ? $instance['list_css_id'] : $this->settings['list_css_id']['std'];
 		$forcecss      = $instance['force_css'] ? $instance['force_css'] : $this->settings['force_css']['std'];
@@ -306,6 +318,7 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 		} else {
 			include_once( XO10_WC_CATS_PLUGIN_INCLUDES . 'walkers/class-cat-list-walker.php' );
       $listWalker = new XO10_WC_Cat_List_Walker();
+      $listWalker->countpos = $cpos;
       $listWalker->imgtxt = $imgtxt;
       $listWalker->imgw = $imgw;
       $listWalker->imgh = $imgh;
