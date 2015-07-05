@@ -6,22 +6,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 include_once( XO10_WC_CATS_PLUGIN_DIR . '../woocommerce/includes/abstracts/abstract-wc-widget.php' );
 
+/**
+ * Product Category Images Widget
+ *
+ * @extends WC_Widget
+ */
 class XO10_WC_Categories_Widget extends WC_Widget {
 
   // widget-specific
   const WIDGET_SLUG = 'xo10_wc_cats_widget';
   const WIDGET_CSS_CLASS = 'woocommerce-product-categories';
   const WIDGET_DISPLAY_NAME = 'XO10 - WooCommerce Categories';
-  
+
   // default image dimensions and constraints
   const IMG_W_MIN = 24;
   const IMG_W_MAX = 200;
   const IMG_W_DEFAULT = 42;
   const IMG_H_MIN = 24;
   const IMG_H_MAX = 200;
-  const IMG_H_DEFAULT = 42; 
- 
-  
+  const IMG_H_DEFAULT = 42;
+
+
 	public $cat_ancestors;
 	public $current_cat;
 
@@ -114,7 +119,6 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 				'std'   => '',
 				'label' => __( 'List CSS ID (for styling purposes)', 'xo10-woocommerce-categories-widget' )
 			),
-      // walter
 			'force_css' => array(
 				'type'  => 'select',
 				'std'   => 'no',
@@ -125,12 +129,18 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 				)
 			),
 		);
-    
+
     parent::__construct();
 	}
 
   /**
-   * @see WC_Widget::update()
+	* Overrides WC_Widget's method to show default number values if they are invalid.
+	*
+	* @see WC_Widget::update()
+	*
+	* @param type $new_instance
+	* @param type $old_instance
+	* @return int
    */
   public function update( $new_instance, $old_instance ) {
 
@@ -147,7 +157,7 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 			} elseif ( 'checkbox' === $setting['type'] ) {
 				$instance[ $key ] = 0;
 			}
-      
+
       if( 'list_css_class' === $key ) {
         if( empty( $new_instance[$key] ) ) {
           $instance[$key] = $setting['std'];
@@ -159,40 +169,43 @@ class XO10_WC_Categories_Widget extends WC_Widget {
           $instance[$key] = (int)$setting['std'];
         }
       }
-      
+
 		}
 
 		$this->flush_widget_cache();
 
 		return $instance;
 	}
-  
+
 	/**
+	 * widget function.
+	 *
 	 * @see WP_Widget
+	 * @access public
+	 * @param array $args
+	 * @param array $instance
+	 * @return void
 	 */
 	public function widget( $args, $instance ) {
-		extract( $args );
-
 		global $wp_query, $post;
 
-		$title         = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
-		$c             = ! empty( $instance['count'] );
-
-		$h             = ! empty( $instance['hierarchical'] );
-		$s             = ! empty( $instance['show_children_only'] );
-		$d             = ! empty( $instance['dropdown'] );
-		$o             = $instance['orderby'] ? $instance['orderby'] : 'order';
+		$c             = isset( $instance['count'] ) ? $instance['count'] : $this->settings['count']['std'];
+		$h             = isset( $instance['hierarchical'] ) ? $instance['hierarchical'] : $this->settings['hierarchical']['std'];
+		$s             = isset( $instance['show_children_only'] ) ? $instance['show_children_only'] : $this->settings['show_children_only']['std'];
+		$d             = isset( $instance['dropdown'] ) ? $instance['dropdown'] : $this->settings['dropdown']['std'];
+		$o             = isset( $instance['orderby'] ) ? $instance['orderby'] : $this->settings['orderby']['std'];
 		$dropdown_args = array( 'hide_empty' => false );
 		$list_args     = array( 'show_count' => $c, 'hierarchical' => $h, 'taxonomy' => 'product_cat', 'hide_empty' => false );
-		$imgtxt        = $instance['img_text_display'] ? $instance['img_text_display'] : $this->settings['img_text_display']['std'];
-		$imgw          = $instance['img_width'] ? $instance['img_width'] : $this->settings['img_width']['std'];
-		$imgh          = $instance['img_height'] ? $instance['img_height'] : $this->settings['img_height']['std'];
-		$cpos          = $instance['count_pos'] ? $instance['count_pos'] : $this->settings['count_pos']['std'];
-		$css_class     = $instance['list_css_class'] ? $instance['list_css_class'] : $this->settings['list_css_class']['std'];
-		$css_id        = $instance['list_css_id'] ? $instance['list_css_id'] : $this->settings['list_css_id']['std'];
-		$forcecss      = $instance['force_css'] ? $instance['force_css'] : $this->settings['force_css']['std'];
 
-    
+		$imgtxt        = isset( $instance['img_text_display'] ) ? $instance['img_text_display'] : $this->settings['img_text_display']['std'];
+		$imgw          = isset( $instance['img_width'] ) ? $instance['img_width'] : $this->settings['img_width']['std'];
+		$imgh          = isset( $instance['img_height'] ) ? $instance['img_height'] : $this->settings['img_height']['std'];
+		$cpos          = isset( $instance['count_pos'] ) ? $instance['count_pos'] : $this->settings['count_pos']['std'];
+		$css_class     = isset( $instance['list_css_class'] ) ? $instance['list_css_class'] : $this->settings['list_css_class']['std'];
+		$css_id        = isset( $instance['list_css_id'] ) ? $instance['list_css_id'] : $this->settings['list_css_id']['std'];
+		$forcecss      = isset( $instance['force_css'] ) ? $instance['force_css'] : $this->settings['force_css']['std'];
+
+
 		// Menu Order
 		$list_args['menu_order'] = false;
 		if ( $o == 'order' ) {
@@ -285,11 +298,7 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 			$list_args['hierarchical']     = 1;
 		}
 
-		echo $before_widget;
-
-		if ( $title ) {
-			echo $before_title . $title . $after_title;
-		}
+		$this->widget_start( $args, $instance );
 
 		// Dropdown
 		if ( $d ) {
@@ -312,11 +321,12 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 						location.href = '" . home_url() . "/?product_cat=' + jQuery(this).val();
 					}
 				});
-			");
+			" );
 
 		// List
 		} else {
 			include_once( XO10_WC_CATS_PLUGIN_INCLUDES . 'walkers/class-cat-list-walker.php' );
+
       $listWalker = new XO10_WC_Cat_List_Walker();
       $listWalker->countpos = $cpos;
       $listWalker->imgtxt = $imgtxt;
@@ -324,7 +334,7 @@ class XO10_WC_Categories_Widget extends WC_Widget {
       $listWalker->imgh = $imgh;
       $listWalker->forcecss = $forcecss;
 
-			$list_args['walker']                     = $listWalker; 
+			$list_args['walker']                     = $listWalker;
 			$list_args['title_li']                   = '';
 			$list_args['pad_counts']                 = 1;
 			$list_args['show_option_none']           = __('No product categories exist.', 'woocommerce' );
@@ -333,7 +343,7 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 
       $css_id = $css_id ? 'id="' . esc_attr( $css_id ) . '"' : '';
       $css_class = ' class="' . esc_attr( $css_class ) . '"';
-      
+
 			echo '<ul ' . $css_id . $css_class . '>';
 
 			wp_list_categories( apply_filters( 'woocommerce_product_categories_widget_args', $list_args ) );
@@ -341,6 +351,6 @@ class XO10_WC_Categories_Widget extends WC_Widget {
 			echo '</ul>';
 		}
 
-		echo $after_widget;
+		$this->widget_end( $args );
 	}
 }

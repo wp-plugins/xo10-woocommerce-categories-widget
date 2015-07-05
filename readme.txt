@@ -3,8 +3,8 @@ Contributors: saltern
 Donate link: http://www.cancer.org
 Tags: woocommerce, widget, product categories, category images, category thumbnails, category icons, xo10
 Requires at least: 3.9
-Tested up to: 4.1
-Stable tag: 1.1
+Tested up to: 4.2
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,7 +42,7 @@ Follow these steps:
 
 = How can I style the list or images to look a certain way? =
 
-You would need to know how your *theme* works and how to use *CSS* in order to style 
+You would need to know how your *theme* works and how to use *CSS* in order to style
 the category images to look a certain way. For example, to display the images as a grid.
 
 = Why aren't images or post counts displayed when categories are displayed as a DropDown? =
@@ -65,13 +65,13 @@ I'll add the PO/MO file when things are more stable.
 
 = Is the plugin's code on GitHub? =
 
-Not at the moment but it will definitely be there. I need some time to test and 
+Not at the moment but it will definitely be there. I need some time to test and
 clean up the code before I put them there.
 
 = What does the XO10 mean? =
 
 To me, it means lots of things but I'll talk about them another day. For now, just take
-it that it sounds like my WordPress username - *saltern*. And is also what I use 
+it that it sounds like my WordPress username - *saltern*. And is also what I use
 as a unique namespace prefix for all plugins that I write.
 
 
@@ -81,7 +81,11 @@ as a unique namespace prefix for all plugins that I write.
 2. Widget display (depends on your theme)
 3. Change of positions to post counts, text, image. (display will depend on theme)
 
+
 == Changelog ==
+
+= 1.2 =
+* Code is updated to work properly with WooCommerce 2.3.x.
 
 = 1.1 =
 * Feature: Category name and thumbnail positions can be switched. As requested by *marco*.
@@ -89,11 +93,14 @@ as a unique namespace prefix for all plugins that I write.
 * Tweak: Added requirement for PHP 5.3 or later in plugin description.
 * Tweak: Changed the plugin text domain.
 
-
 = 1.0 =
 * Initial release.
 
+
 == Upgrade Notice ==
+
+= 1.2 =
+*  No new features added. Only source code updated.
 
 = 1.1 =
 * Make sure the "Text/Image display" field value is correct after upgrade. Change the value and save the widget again if necessary.
